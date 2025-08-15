@@ -18,7 +18,7 @@ namespace Docker.DotNet
     {
         public JsonSerializer()
         {
-            DefaultJsonSerializerContext.PreserveReflection();
+            DockerDotnetJsonSerializerContext.PreserveReflection();
         }
 
         // Adapted from https://github.com/dotnet/runtime/issues/33030#issuecomment-1524227075
@@ -31,7 +31,7 @@ namespace Docker.DotNet
                 var buffer = result.Buffer;
                 while (!buffer.IsEmpty && TryParseJson(ref buffer, out var jsonDocument))
                 {
-                    var deserializedObj = jsonDocument.Deserialize(typeof(T), DefaultJsonSerializerContext.Default);
+                    var deserializedObj = jsonDocument.Deserialize(typeof(T), DockerDotnetJsonSerializerContext.Default);
                     yield return (T) deserializedObj;
                 }
 
@@ -61,19 +61,19 @@ namespace Docker.DotNet
 
         public T DeserializeObject<T>(byte[] json)
         {
-            var deserializedObj = System.Text.Json.JsonSerializer.Deserialize(json, typeof(T), DefaultJsonSerializerContext.Default);
+            var deserializedObj = System.Text.Json.JsonSerializer.Deserialize(json, typeof(T), DockerDotnetJsonSerializerContext.Default);
             return (T)deserializedObj;
         }
 
         public byte[] SerializeObject<T>(T value)
         {
-            var jsonString = System.Text.Json.JsonSerializer.Serialize(value, typeof(T), DefaultJsonSerializerContext.Default);
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(value, typeof(T), DockerDotnetJsonSerializerContext.Default);
             return Encoding.UTF8.GetBytes(jsonString);
         }
 
         public HttpContent GetHttpContent<T>(T value)
         {
-            var jsonString = System.Text.Json.JsonSerializer.Serialize(value, typeof(T), DefaultJsonSerializerContext.Default);
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(value, typeof(T), DockerDotnetJsonSerializerContext.Default);
             HttpContent httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return httpContent;
         }
@@ -81,7 +81,7 @@ namespace Docker.DotNet
         public async Task<T> DeserializeAsync<T>(HttpContent content, CancellationToken token)
         {
             var jsonString = await content.ReadAsStringAsync(token);
-            var deserializedObj = System.Text.Json.JsonSerializer.Deserialize(jsonString, typeof(T), DefaultJsonSerializerContext.Default);
+            var deserializedObj = System.Text.Json.JsonSerializer.Deserialize(jsonString, typeof(T), DockerDotnetJsonSerializerContext.Default);
             return (T)deserializedObj;
         }
     }
