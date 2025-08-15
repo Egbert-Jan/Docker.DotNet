@@ -16,7 +16,8 @@ namespace Docker.DotNet
         {
             Debug.Assert(o != null);
 
-            return new[] { System.Text.Json.JsonSerializer.Serialize(o) };
+            var jsonString = System.Text.Json.JsonSerializer.Serialize(o, o.GetType(), DefaultJsonSerializerContext.Default);
+            return new[] { jsonString };
         }
     }
 }
