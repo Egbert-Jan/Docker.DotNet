@@ -5,7 +5,6 @@ namespace Docker.DotNet.Models
 
     public enum RestartPolicyKind
     {
-
         [EnumMember(Value = "no")]
         No,
 
